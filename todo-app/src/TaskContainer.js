@@ -10,7 +10,7 @@ export class TaskContainer extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            tasks: [],
+            tasks: JSON.parse(localStorage.getItem('tasks')) || [],
             filter: 'All'
         }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,11 +18,13 @@ export class TaskContainer extends React.Component {
         this.onDelete = this.onDelete.bind(this);
     }
     handleSubmit = (task) => {
+        const tasks = [
+            ...this.state.tasks,
+            task
+        ];
+        localStorage.setItem('tasks',JSON.stringify(tasks))
         this.setState({
-            tasks: [
-                ...this.state.tasks,
-                task
-            ]
+            tasks   
         });
     }
     onDone = (taskId) => {
@@ -66,22 +68,20 @@ export class TaskContainer extends React.Component {
 
         switch (filter) {
             case 'Active':
-                return tasks.filter((task) => task.isActive);
+                return tasks.filter((task) => task.isActive && !task.isDeleted);
 
             case 'Done':
-                return tasks.filter((task) => !task.isActive);
-                // <Checkbox checked/>
+                return tasks.filter((task) => !task.isActive && !task.isDeleted);
 
             case 'Deleted':
                 return tasks.filter((task) => task.isDeleted);
 
-
             case 'All':
+                return tasks.filter((task)=> !task.isDeleted);
+            
             default:
                 return tasks
         }
-
-
     }
 
     render() {

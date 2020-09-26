@@ -21,21 +21,13 @@ export class TaskAddForm extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSumbit = this.handleSubmit.bind(this);
-        this.handleSelectChange = this.handleSelectChange.bind(this);
     }
-    handleChange(event) {
+
+    handleChange(event,propertyName) {
         this.setState({
             task: {
                 ...this.state.task,
-                title: event.target.value,
-            }
-        })
-    }
-    handleSelectChange(event) {
-        this.setState({
-            task: {
-                ...this.state.task,
-                priority: event.target.value
+                [propertyName]: event.target.value,
             }
         })
     }
@@ -44,20 +36,23 @@ export class TaskAddForm extends React.Component {
         this.setState({
             task: {
                 ...this.state.task,
-                date: 'Added on ' + moment().format('Do MMM YYYY, hh:mm '),
+                date: moment().format('Do MMM YYYY, hh:mm '),
                 id: uuidv4(),
+                title:this.state.task.title.trim()
             }
         }, () => {
-            this.props.handleSubmit(this.state.task);
-            this.setState({
-                task: {
-                    isActive: true,
-                    isDeleted: false,
-                    title: '',
-                    priority: ''
-                }
-            })
-            console.log(this.state.task)    
+            if(!!this.state.task.title){
+                this.props.handleSubmit(this.state.task);
+                this.setState({
+                    task: {
+                        isActive: true,
+                        isDeleted: false,
+                        title: '',
+                        priority: ''
+                    }
+                })
+            }
+            
         })
     }
     render() {
@@ -65,15 +60,16 @@ export class TaskAddForm extends React.Component {
             <div className='container'>
                 <form noValidate autoComplete="off">
                     <TextField id="outlined-basic" label="What needs to be done?" variant="outlined"
-                        value={this.state.task.title} onChange={this.handleChange}
+                        value={this.state.task.title} onChange={(e)=>this.handleChange(e,'title')}
                     />
                 </form>
                 <Select
                     native
+                    variant="outlined"
                     labe="priority"
                     id="demo-simple-select"
                     value={this.state.task.priority}
-                    onChange={this.handleSelectChange}
+                    onChange={(e)=>this.handleChange(e,'priority')}
 
                 >
                     <option defaultValue>Priority</option>

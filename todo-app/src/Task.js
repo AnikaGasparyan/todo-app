@@ -10,7 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 export const Task = ({ task, onDone, onDelete }) => {
   return (
-    <div className={`deleted-${task.isDeleted} list`}>
+    <div className= 'list'>
       <ListItem key={task.id} className={'priority-'+task.priority} >
         <ListItemIcon>
           <input 
@@ -24,7 +24,7 @@ export const Task = ({ task, onDone, onDelete }) => {
         </ListItemIcon>
         <ListItemText primary={task.title} className={'isActive-'+ task.isActive} />
         <ListItemSecondaryAction>
-          {task.date}
+          Added on {task.date}
           <IconButton edge="end" aria-label="delete" onClick={() => {
             let taskId = task.id;
             onDelete(taskId)
