@@ -1,4 +1,5 @@
 import React from 'react';
+import './TaskContainer.css'
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
@@ -13,8 +14,9 @@ export class TaskAddForm extends React.Component {
                 title: '',
                 priority: '',
                 date: '',
-                isActive: 'true',
-                id: ''
+                isActive: true,
+                id: '',
+                isDeleted: false
             }
         }
         this.handleChange = this.handleChange.bind(this);
@@ -37,7 +39,7 @@ export class TaskAddForm extends React.Component {
             }
         })
     }
-
+    
     handleSubmit() {
         this.setState({
             task: {
@@ -47,15 +49,22 @@ export class TaskAddForm extends React.Component {
             }
         }, () => {
             this.props.handleSubmit(this.state.task);
-            console.log(this.state.task)
-
+            this.setState({
+                task: {
+                    isActive: true,
+                    isDeleted: false,
+                    title: '',
+                    priority: ''
+                }
+            })
+            console.log(this.state.task)    
         })
     }
     render() {
         return (
-            <div style={{ display: "inline-flex" }}    >
+            <div className='container'>
                 <form noValidate autoComplete="off">
-                    <TextField id="outlined-basic" label="Task Title" variant="outlined"
+                    <TextField id="outlined-basic" label="What needs to be done?" variant="outlined"
                         value={this.state.task.title} onChange={this.handleChange}
                     />
                 </form>
@@ -74,6 +83,7 @@ export class TaskAddForm extends React.Component {
                 </Select>
                 <Button variant="contained" color="primary"
                     onClick={this.handleSumbit}
+                     disabled={this.state.task.title===''}
                 >
                     Submit
             </Button>

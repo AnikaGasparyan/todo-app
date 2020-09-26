@@ -1,0 +1,16 @@
+.priority-0{
+    background-color: rgba(255, 255, 126, 0.7);
+}
+.priority-2{
+    background-color: rgba(207, 0, 15, 0.5);
+}
+.deleted-true {
+    opacity: 0.5;
+}
+.list {
+    margin-top: 10px;
+    list-style: none;
+}
+.isActive-false {
+    text-decoration: line-through;
+}
