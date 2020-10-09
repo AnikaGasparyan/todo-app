@@ -2,3 +2,11 @@
     display: flex;
     justify-content: center;
 }
+
+.btn-group{
+    display: block;
+    margin-top: 25px;
+}
+.filter-true {
+    background-color: red;
+}

@@ -2,9 +2,7 @@ import React from 'react';
 import { TaskAddForm } from './TaskAddForm';
 import { Task } from './Task';
 import { Filters } from './Filters';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-
+import {Card, CardContent} from '@material-ui/core';
 
 export class TaskContainer extends React.Component {
     constructor(props) {
@@ -40,12 +38,14 @@ export class TaskContainer extends React.Component {
             })
         },
             () => {
-                console.log(this.state.tasks)
+                let tasks = this.state.tasks;
+                localStorage.setItem('tasks',JSON.stringify(tasks));
             }
         )
 
     }
     onDelete = (taskId) => {
+        
         this.setState({
             tasks: this.state.tasks.map(task => {
                 if (task.id === taskId) {
@@ -56,7 +56,11 @@ export class TaskContainer extends React.Component {
                 }
                 return task
             })
-        })
+        },
+            () => {
+                let tasks = this.state.tasks;
+                localStorage.setItem('tasks',JSON.stringify(tasks));
+            })
     }
     handleFilter = (filter) => {
         this.setState({
@@ -91,9 +95,9 @@ export class TaskContainer extends React.Component {
                 <CardContent>
                     <TaskAddForm handleSubmit={this.handleSubmit} />
                     {tasks.map((task) => <Task task={task} key={task.id} onDone={this.onDone} onDelete={this.onDelete} />)}
-                    <Filters onFilter={this.handleFilter} />
+                    <Filters task={this.state.tasks.task} onFilter={this.handleFilter} />
                 </CardContent>    
             </Card>
         )
     }
-}   
+} 

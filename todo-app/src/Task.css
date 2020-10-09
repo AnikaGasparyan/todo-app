@@ -1,12 +1,22 @@
-.priority-0{
-    background-color: rgba(255, 255, 126, 0.7);
-}
-.priority-2{
-    background-color: rgba(207, 0, 15, 0.5);
-}
+
 .list {
     margin-top: 10px;
+    margin-left: 19%;
     list-style: none;
+    width: 100%;
+    max-width: 760px;
+    background-color: blanchedalmond;
+}
+.priority-low{
+    background-color: rgba(255, 255, 126, 0.7);
+}
+.priority-high{
+    background-color: rgba(207, 0, 15, 0.5);
+}
+.task {
+    max-width: 360px;
+    cursor: pointer;
+
 }
 .isActive-false {
     text-decoration: line-through;
