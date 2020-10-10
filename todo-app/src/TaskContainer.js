@@ -64,10 +64,7 @@ export class TaskContainer extends React.Component {
     handleFilter = (activeFilter) => {
         this.setState({
             activeFilter: activeFilter
-        }, ()=>{
-            console.log(this.state.activeFilter)
-        }
-        )
+        })
     }
     getFilteredTasks = () => {
         const { activeFilter, tasks } = this.state;

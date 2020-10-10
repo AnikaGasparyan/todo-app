@@ -17,7 +17,8 @@ export class TaskAddForm extends React.Component {
                 date: '',
                 isActive: true,
                 id: '',
-                isDeleted: false
+                isDeleted: false,
+                isSubmitted: false,
             }
         }
         this.handleChange = this.handleChange.bind(this);
@@ -35,15 +36,20 @@ export class TaskAddForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
+        this.setState({
+            isSubmitted: true
+        })
         if(this.state.task.priority === ''){
              return 
         }
         this.setState({
+            isSubmitted: false,
             task: {
                 ...this.state.task,
                 date: moment().format('Do MMM YYYY, hh:mm '),
                 id: uuidv4(),
-                title: this.state.task.title.trim()
+                title: this.state.task.title.trim(),
+                
             }
         }, () => {
             if (!!this.state.task.title) {
@@ -94,7 +100,7 @@ export class TaskAddForm extends React.Component {
                         SUBMIT
                 </Button>
                 <div>
-                   { this.state.task.priority===''? errorMsg : '' }
+                   { this.state.task.priority==='' &&  this.state.isSubmitted? errorMsg : '' }
                 </div>
                 </form>
             </div>
