@@ -9,7 +9,7 @@ export class TaskContainer extends React.Component {
         super(props)
         this.state = {
             tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-            filter: 'All'
+            activeFilter: 'All'
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onDone = this.onDone.bind(this);
@@ -44,8 +44,7 @@ export class TaskContainer extends React.Component {
         )
 
     }
-    onDelete = (taskId) => {
-        
+    onDelete = (taskId) => {  
         this.setState({
             tasks: this.state.tasks.map(task => {
                 if (task.id === taskId) {
@@ -62,15 +61,19 @@ export class TaskContainer extends React.Component {
                 localStorage.setItem('tasks',JSON.stringify(tasks));
             })
     }
-    handleFilter = (filter) => {
+    handleFilter = (activeFilter) => {
         this.setState({
-            filter: filter
-        })
+            activeFilter: activeFilter
+        }, ()=>{
+            console.log(this.state.activeFilter)
+        }
+        )
     }
     getFilteredTasks = () => {
-        const { filter, tasks } = this.state;
+        const { activeFilter, tasks } = this.state;
+        
 
-        switch (filter) {
+        switch (activeFilter) {
             case 'Active':
                 return tasks.filter((task) => task.isActive && !task.isDeleted);
 
@@ -90,12 +93,13 @@ export class TaskContainer extends React.Component {
 
     render() {
         const tasks = this.getFilteredTasks();
+          
         return (
             <Card>
                 <CardContent>
                     <TaskAddForm handleSubmit={this.handleSubmit} />
-                    {tasks.map((task) => <Task task={task} key={task.id} onDone={this.onDone} onDelete={this.onDelete} />)}
-                    <Filters task={this.state.tasks.task} onFilter={this.handleFilter} />
+                    {tasks.map((task) => <Task task={task} key={task.id} onDone={this.onDone} onDelete={this.onDelete} currentFilter = {this.state.activeFilter} />)}
+                    <Filters currentFilter = {this.state.activeFilter} onFilter={this.handleFilter} />
                 </CardContent>    
             </Card>
         )

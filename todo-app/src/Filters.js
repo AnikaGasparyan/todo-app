@@ -1,18 +1,18 @@
 import React from 'react';
 import './TaskContainer.css'
-import { Button, ButtonGroup } from '@material-ui/core';
+import { ButtonGroup, Button } from '@material-ui/core';
 
-export const Filters = ({ task, onFilter }) => {
+export const Filters = ({ onFilter, currentFilter }) => {
   return (
     <div className='container'>
       <ButtonGroup variant="contained"
         color="primary" aria-label="contained primary button group"
         disableElevation
         className="btn-group">
-        <Button className={"filter-"} onClick={() => onFilter('All')}>All</Button>
-        <Button onClick={() => onFilter('Active')}>Active</Button>
-        <Button onClick={() => onFilter('Done')}>Done</Button>
-        <Button onClick={() => onFilter('Deleted')}>Deleted</Button>
+        <Button onClick={() => onFilter('All')}  color={currentFilter === 'All' ? 'secondary': 'primary '}>All</Button>
+        <Button onClick={() => onFilter('Active')} color={currentFilter === 'Active' ? 'secondary': 'primary '}>Active</Button>
+        <Button onClick={() => onFilter('Done')} color={currentFilter === 'Done' ? 'secondary': 'primary '}>Done </Button>
+        <Button onClick={() => onFilter('Deleted')} color={currentFilter === 'Deleted' ? 'secondary': 'primary '}>Deleted </Button>
       </ButtonGroup>
     </div>
   )

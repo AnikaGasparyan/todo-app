@@ -21,3 +21,6 @@
 .isActive-false {
     text-decoration: line-through;
 }
+.disabled {
+    pointer-events: none;
+}

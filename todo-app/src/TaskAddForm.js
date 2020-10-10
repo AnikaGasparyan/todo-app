@@ -36,7 +36,7 @@ export class TaskAddForm extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         if(this.state.task.priority === ''){
-        return(<Alert severity="error">This is an error alert — check it out!</Alert>) 
+             return 
         }
         this.setState({
             task: {
@@ -60,8 +60,9 @@ export class TaskAddForm extends React.Component {
 
         })
     }
-
+    
     render() {
+        const errorMsg = <Alert severity="error">Selecting priority is requiered</Alert>;
         return (
             <div className='container'>
                 <form onSubmit={(e) => this.handleSumbit(e)}>
@@ -92,6 +93,9 @@ export class TaskAddForm extends React.Component {
                     >
                         SUBMIT
                 </Button>
+                <div>
+                   { this.state.task.priority===''? errorMsg : '' }
+                </div>
                 </form>
             </div>
         )
