@@ -9,10 +9,10 @@ export const Filters = ({ onFilter, currentFilter }) => {
         color="primary" aria-label="contained primary button group"
         disableElevation
         className="btn-group">
-        <Button onClick={() => onFilter('All')}  color={currentFilter === 'All' ? 'secondary': 'primary '}>All</Button>
-        <Button onClick={() => onFilter('Active')} color={currentFilter === 'Active' ? 'secondary': 'primary '}>Active</Button>
-        <Button onClick={() => onFilter('Done')} color={currentFilter === 'Done' ? 'secondary': 'primary '}>Done </Button>
-        <Button onClick={() => onFilter('Deleted')} color={currentFilter === 'Deleted' ? 'secondary': 'primary '}>Deleted </Button>
+        <Button onClick={() => onFilter('All')}  color={currentFilter === 'All' ? 'secondary': 'primary'}>All</Button>
+        <Button onClick={() => onFilter('Active')} color={currentFilter === 'Active' ? 'secondary': 'primary'}>Active</Button>
+        <Button onClick={() => onFilter('Done')} color={currentFilter === 'Done' ? 'secondary': 'primary'}>Done </Button>
+        <Button onClick={() => onFilter('Deleted')} color={currentFilter === 'Deleted' ? 'secondary': 'primary'}>Deleted </Button>
       </ButtonGroup>
     </div>
   )
