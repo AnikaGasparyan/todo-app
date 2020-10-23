@@ -10,20 +10,20 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 
 export const Task = ({ task, onDone, onDelete, currentFilter }) => {
-  let check = () => {
+  const check = (e) => {
     let taskId = task.id;
-    onDone(taskId)
+    onDone(taskId, e.target.checked)
   }
   return (
     <div className={`list ${currentFilter==='Deleted'? 'disabled' : ''}`}>
       <ListItem key={task.id}
         className={`priority-${task.priority}`}
         dense disabled={task.isDeleted} 
-        onClick ={()=> {check()}}
+        onClick ={check}
          >
         <ListItemIcon>
           <Checkbox
-          onClick ={()=> {check()}}
+          onClick ={check}
             checked={!task.isActive}
             disabled={task.isDeleted}
             edge="start"

@@ -1,109 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './TaskContainer.css'
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
-import moment from '../node_modules/moment'
-import { v4 as uuidv4 } from '../node_modules/uuid'
+import moment from 'moment'
+import { v4 as uuidv4 } from 'uuid'
 import { Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
-export class TaskAddForm extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            task: {
-                title: '',
-                priority: '',
-                date: '',
-                isActive: true,
-                id: '',
-                isDeleted: false,
-                isSubmitted: false,
-            }
-        }
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSumbit = this.handleSubmit.bind(this);
-    }
+export const TaskAddForm = (props) => {
+    const initialTaskState = {
+        title: '',
+        priority: '',
+        date: '',
+        isActive: true,
+        id: '',
+        isDeleted: false
+    };
+    const [task, setTask] = useState(initialTaskState);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
-    handleChange(event, propertyName) {
-        this.setState({
-            task: {
-                ...this.state.task,
-                [propertyName]: event.target.value,
-            }
+    const handleChange = (event, propertyName) => {
+        setTask({
+            ...task,
+            [propertyName]: event.target.value
         })
     }
-
-    handleSubmit(e) {
+    const handleSumbit = (e) => {
         e.preventDefault();
-        this.setState({
-            isSubmitted: true
-        })
-        if(this.state.task.priority === ''){
-             return 
+        setIsSubmitted(true);
+
+        if (task.priority === '') {
+            return
         }
-        this.setState({
-            isSubmitted: false,
-            task: {
-                ...this.state.task,
-                date: moment().format('Do MMM YYYY, hh:mm '),
-                id: uuidv4(),
-                title: this.state.task.title.trim(),
-                
-            }
-        }, () => {
-            if (!!this.state.task.title) {
-                this.props.handleSubmit(this.state.task);
-                this.setState({
-                    task: {
-                        isActive: true,
-                        isDeleted: false,
-                        title: '',
-                        priority: ''
-                    }
-                })
-            }
 
-        })
+        const taskItem = {
+            ...task,
+            date: moment().format('Do MMM YYYY, hh:mm '),
+            id: uuidv4(),
+            title: task.title.trim(),
+        };
+
+        props.handleSubmit(taskItem);
+        setIsSubmitted(false);
+        setTask({
+            ...initialTaskState
+        });
     }
-    
-    render() {
-        const errorMsg = <Alert severity="error">Selecting priority is requiered</Alert>;
-        return (
-            <div className='container'>
-                <form onSubmit={(e) => this.handleSumbit(e)}>
-                    <TextField id="outlined-basic" label="What needs to be done?" variant="outlined"
-                        value={this.state.task.title} onChange={(e) => this.handleChange(e, 'title')}
-                    />
 
-                    <Select
-                        native
-                        variant="outlined"
-                        value={this.state.task.priority}
-                        onChange={(e) => this.handleChange(e, 'priority')}
-                        placeholder="Select priotiy"
-                    >
+    return (
+        <div className='container'>
+            <form onSubmit={(e) => handleSumbit(e)}>
+                <TextField id="outlined-basic" label="What needs to be done?" variant="outlined"
+                    value={task.title} onChange={(e) => handleChange(e, 'title')}
+                />
 
-                        <option value="" disabled>
-                            Select Priority
-                    </option>
-                        <option value={'low'} >Low</option>
-                        <option value={'normal'} >Normal</option>
-                        <option value={'high'}>Important</option>
-                    </Select>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={this.state.task.title === ''}
-                        type="submit"
-                    >
-                        SUBMIT
-                </Button>
+                <Select
+                    native
+                    variant="outlined"
+                    value={task.priority}
+                    onChange={(e) => handleChange(e, 'priority')}
+                    placeholder="Select priotiy"
+                >
+
+                    <option value="" disabled>
+                        Select Priority
+                </option>
+                    <option value={'low'} >Low</option>
+                    <option value={'normal'} >Normal</option>
+                    <option value={'high'}>Important</option>
+                </Select>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={task.title === ''}
+                    type="submit"
+                >
+                    SUBMIT
+            </Button>
                 <div>
-                   { this.state.task.priority==='' &&  this.state.isSubmitted? errorMsg : '' }
+                    {task.priority === '' && isSubmitted ? <Alert severity="error">Selecting priority is requiered</Alert> : ''}
                 </div>
-                </form>
-            </div>
-        )
-    }
-}
+            </form>
+        </div>
+    )
+} 
