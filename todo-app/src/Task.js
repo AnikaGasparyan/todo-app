@@ -9,16 +9,16 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Checkbox from '@material-ui/core/Checkbox';
 
 
-export const Task = ({ task, onDone, onDelete, currentFilter }) => {
+export const Task = ({ task, onDone, onDelete, deleted }) => {
   const check = (e) => {
     let taskId = task.id;
     onDone(taskId, e.target.checked)
   }
   return (
-    <div className={`list ${currentFilter==='Deleted'? 'disabled' : ''}`}>
+    <div className={`list ${deleted ? 'disabled' : ''}`}>
       <ListItem key={task.id}
         className={`priority-${task.priority}`}
-        dense disabled={task.isDeleted} 
+        dense disabled={task.isDeleted}
         onClick ={check}
          >
         <ListItemIcon>

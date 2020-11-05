@@ -7,15 +7,16 @@ import { v4 as uuidv4 } from 'uuid'
 import { Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
+const initialTaskState = {
+    title: '',
+    priority: '',
+    date: '',
+    isActive: true,
+    id: '',
+    isDeleted: false
+};
+
 export const TaskAddForm = (props) => {
-    const initialTaskState = {
-        title: '',
-        priority: '',
-        date: '',
-        isActive: true,
-        id: '',
-        isDeleted: false
-    };
     const [task, setTask] = useState(initialTaskState);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -59,12 +60,11 @@ export const TaskAddForm = (props) => {
                     variant="outlined"
                     value={task.priority}
                     onChange={(e) => handleChange(e, 'priority')}
-                    placeholder="Select priotiy"
+                    placeholder="Select priority"
                 >
-
                     <option value="" disabled>
                         Select Priority
-                </option>
+                    </option>
                     <option value={'low'} >Low</option>
                     <option value={'normal'} >Normal</option>
                     <option value={'high'}>Important</option>
@@ -83,4 +83,4 @@ export const TaskAddForm = (props) => {
             </form>
         </div>
     )
-} 
+}
