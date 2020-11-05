@@ -9,21 +9,26 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Checkbox from '@material-ui/core/Checkbox';
 
 
-export const Task = ({ task, onDone, onDelete, currentFilter }) => {
-  let check = () => {
-    let taskId = task.id;
-    onDone(taskId)
+export const Task = ({ task, onDone, onDelete, disabled }) => {
+  const handleClick = () => {
+    onDone(task.id);
   }
+
+  const handleDelete = () => {
+    onDelete(task.id);
+  };
+
   return (
-    <div className={`list ${currentFilter==='Deleted'? 'disabled' : ''}`}>
-      <ListItem key={task.id}
+    <div className={`list ${disabled ? 'disabled' : ''}`}>
+      <ListItem
         className={`priority-${task.priority}`}
-        dense disabled={task.isDeleted} 
-        onClick ={()=> {check()}}
+        dense
+        disabled={task.isDeleted}
+        onClick={handleClick}
          >
         <ListItemIcon>
           <Checkbox
-          onClick ={()=> {check()}}
+            onClick={handleClick}
             checked={!task.isActive}
             disabled={task.isDeleted}
             edge="start"
@@ -32,10 +37,7 @@ export const Task = ({ task, onDone, onDelete, currentFilter }) => {
         <ListItemText primary={task.title} className={`isActive-${task.isActive} task`} />
         <ListItemSecondaryAction>
           Added on {task.date}
-          <IconButton edge="end" aria-label="delete" onClick={() => {
-            let taskId = task.id;
-            onDelete(taskId)
-          }}>
+          <IconButton edge="end" aria-label="delete" onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
         </ListItemSecondaryAction>

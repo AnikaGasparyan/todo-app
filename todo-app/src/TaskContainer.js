@@ -8,21 +8,35 @@ export class TaskContainer extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+            tasks: this.getLocalData(),
             activeFilter: 'All'
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onDone = this.onDone.bind(this);
         this.onDelete = this.onDelete.bind(this);
     }
+    getLocalData = () => {
+        try {
+            return JSON.parse(localStorage.getItem('tasks')) || [];
+        }
+        catch (ex) {
+            return  [];
+        }
+    }
+    updateLocalData = () => {
+        localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+    }
     handleSubmit = (task) => {
-        const tasks = [
-            ...this.state.tasks,
-            task
-        ];
-        localStorage.setItem('tasks',JSON.stringify(tasks))
-        this.setState({
-            tasks   
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                tasks: [
+                    ...prevState.tasks,
+                    task,
+                ]
+            }
+        }, () => {
+            this.updateLocalData();
         });
     }
     onDone = (taskId) => {
@@ -36,15 +50,13 @@ export class TaskContainer extends React.Component {
                 }
                 return task
             })
-        },
-            () => {
-                let tasks = this.state.tasks;
-                localStorage.setItem('tasks',JSON.stringify(tasks));
+        }, () => {
+            this.updateLocalData();
             }
         )
 
     }
-    onDelete = (taskId) => {  
+    onDelete = (taskId) => {
         this.setState({
             tasks: this.state.tasks.map(task => {
                 if (task.id === taskId) {
@@ -57,18 +69,15 @@ export class TaskContainer extends React.Component {
             })
         },
             () => {
-                let tasks = this.state.tasks;
-                localStorage.setItem('tasks',JSON.stringify(tasks));
+                this.updateLocalData();
             })
     }
     handleFilter = (activeFilter) => {
-        this.setState({
-            activeFilter: activeFilter
-        })
+        this.setState({ activeFilter });
     }
     getFilteredTasks = () => {
         const { activeFilter, tasks } = this.state;
-        
+
 
         switch (activeFilter) {
             case 'Active':
@@ -82,7 +91,7 @@ export class TaskContainer extends React.Component {
 
             case 'All':
                 return tasks.filter((task)=> !task.isDeleted);
-            
+
             default:
                 return tasks
         }
@@ -90,15 +99,18 @@ export class TaskContainer extends React.Component {
 
     render() {
         const tasks = this.getFilteredTasks();
-          
+
         return (
             <Card>
                 <CardContent>
-                    <TaskAddForm handleSubmit={this.handleSubmit} />
-                    {tasks.map((task) => <Task task={task} key={task.id} onDone={this.onDone} onDelete={this.onDelete} currentFilter = {this.state.activeFilter} />)}
-                    <Filters currentFilter = {this.state.activeFilter} onFilter={this.handleFilter} />
-                </CardContent>    
+                    <TaskAddForm onSubmit={this.handleSubmit} />
+                    {tasks.map((task) => {
+                        const disabled = this.state.activeFilter === "Deleted";
+                        return <Task task={task} key={task.id} onDone={this.onDone} onDelete={this.onDelete} disabled={disabled} />;
+                    })}
+                    <Filters currentFilter={this.state.activeFilter} onFilter={this.handleFilter} />
+                </CardContent>
             </Card>
         )
     }
-} 
+}

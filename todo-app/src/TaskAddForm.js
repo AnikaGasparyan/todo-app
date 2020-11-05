@@ -9,23 +9,21 @@ import Alert from '@material-ui/lab/Alert';
 
 export class TaskAddForm extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
+
         this.state = {
+            error: '',
             task: {
                 title: '',
                 priority: '',
-                date: '',
-                isActive: true,
-                id: '',
-                isDeleted: false,
-                isSubmitted: false,
             }
         }
+
         this.handleChange = this.handleChange.bind(this);
-        this.handleSumbit = this.handleSubmit.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event, propertyName) {
+    handleChange = (propertyName) => (event) => {
         this.setState({
             task: {
                 ...this.state.task,
@@ -36,57 +34,56 @@ export class TaskAddForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        this.setState({
-            isSubmitted: true
-        })
-        if(this.state.task.priority === ''){
-             return 
-        }
-        this.setState({
-            isSubmitted: false,
-            task: {
-                ...this.state.task,
-                date: moment().format('Do MMM YYYY, hh:mm '),
-                id: uuidv4(),
-                title: this.state.task.title.trim(),
-                
-            }
-        }, () => {
-            if (!!this.state.task.title) {
-                this.props.handleSubmit(this.state.task);
-                this.setState({
-                    task: {
-                        isActive: true,
-                        isDeleted: false,
-                        title: '',
-                        priority: ''
-                    }
-                })
-            }
 
-        })
+        const { priority, title } = this.state.task;
+
+        if (priority === '') {
+            this.setState({
+                error: "Selecting priority is required",
+            });
+        }
+        else if (title.trim().length === 0) {
+            this.setState({
+                error: "Title is required",
+            });
+        }
+        else {
+            const submitData = {
+                ...this.state.task,
+                date: moment().format('Do MMM YYYY, hh:mm'),
+                id: uuidv4(),
+                title: title.trim(),
+                isActive: true,
+                isDeleted: false,
+            };
+
+            this.props.onSubmit(submitData);
+            this.setState({
+                error: "",
+                task: {
+                    title: '',
+                    priority: ''
+                }
+            });
+        }
     }
-    
+
     render() {
-        const errorMsg = <Alert severity="error">Selecting priority is requiered</Alert>;
         return (
             <div className='container'>
-                <form onSubmit={(e) => this.handleSumbit(e)}>
+                <form onSubmit={this.handleSubmit}>
                     <TextField id="outlined-basic" label="What needs to be done?" variant="outlined"
-                        value={this.state.task.title} onChange={(e) => this.handleChange(e, 'title')}
+                        value={this.state.task.title} onChange={this.handleChange('title')}
                     />
 
                     <Select
                         native
                         variant="outlined"
                         value={this.state.task.priority}
-                        onChange={(e) => this.handleChange(e, 'priority')}
+                        onChange={this.handleChange('priority')}
                         placeholder="Select priotiy"
                     >
-
-                        <option value="" disabled>
-                            Select Priority
-                    </option>
+                        <option value="" disabled>Select Priority</option>
                         <option value={'low'} >Low</option>
                         <option value={'normal'} >Normal</option>
                         <option value={'high'}>Important</option>
@@ -99,8 +96,9 @@ export class TaskAddForm extends React.Component {
                     >
                         SUBMIT
                 </Button>
+
                 <div>
-                   { this.state.task.priority==='' &&  this.state.isSubmitted? errorMsg : '' }
+                   { this.state.error && <Alert severity="error">{this.state.error}</Alert> }
                 </div>
                 </form>
             </div>

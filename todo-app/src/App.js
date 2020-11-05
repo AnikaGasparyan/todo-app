@@ -4,9 +4,7 @@ import { TaskContainer } from './TaskContainer'
 
 function App() {
   return (
-    <>
       <TaskContainer />
-    </>
   );
 }
 
