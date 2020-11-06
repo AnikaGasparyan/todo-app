@@ -10,17 +10,13 @@ import Alert from '@material-ui/lab/Alert';
 const initialTaskState = {
     title: '',
     priority: '',
-    date: '',
-    isActive: true,
-    id: '',
-    isDeleted: false
 };
 
 export const TaskAddForm = (props) => {
     const [task, setTask] = useState(initialTaskState);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleChange = (event, propertyName) => {
+    const handleChange = (propertyName) => (event) => {
         setTask({
             ...task,
             [propertyName]: event.target.value
@@ -28,43 +24,46 @@ export const TaskAddForm = (props) => {
     }
     const handleSumbit = (e) => {
         e.preventDefault();
-        setIsSubmitted(true);
+        
 
         if (task.priority === '') {
-            return
+            setError('Selecting priority is requiered');
         }
-
-        const taskItem = {
-            ...task,
-            date: moment().format('Do MMM YYYY, hh:mm '),
-            id: uuidv4(),
-            title: task.title.trim(),
-        };
-
-        props.handleSubmit(taskItem);
-        setIsSubmitted(false);
-        setTask({
-            ...initialTaskState
-        });
+        else if(task.title.trim().length === 0) {
+            setError('Task title is requiered')
+        }
+        else {
+            const submitData = {
+                ...task,
+                date: moment().format('Do MMM YYYY, hh:mm'),
+                id: uuidv4(),
+                title: task.title.trim(),
+                isActive: true,
+                isDeleted: false
+            }
+            props.handleSubmit(submitData);
+            setError('')
+            setTask({
+                ...initialTaskState
+            });
+        }
     }
 
     return (
         <div className='container'>
-            <form onSubmit={(e) => handleSumbit(e)}>
+            <form onSubmit={handleSumbit}>
                 <TextField id="outlined-basic" label="What needs to be done?" variant="outlined"
-                    value={task.title} onChange={(e) => handleChange(e, 'title')}
+                    value={task.title} onChange={handleChange('title')}
                 />
 
                 <Select
                     native
                     variant="outlined"
                     value={task.priority}
-                    onChange={(e) => handleChange(e, 'priority')}
+                    onChange={handleChange('priority')}
                     placeholder="Select priority"
                 >
-                    <option value="" disabled>
-                        Select Priority
-                    </option>
+                    <option value="" disabled>Select Priority</option>
                     <option value={'low'} >Low</option>
                     <option value={'normal'} >Normal</option>
                     <option value={'high'}>Important</option>
@@ -78,7 +77,7 @@ export const TaskAddForm = (props) => {
                     SUBMIT
             </Button>
                 <div>
-                    {task.priority === '' && isSubmitted ? <Alert severity="error">Selecting priority is requiered</Alert> : ''}
+                     {error &&  <Alert severity="error">{error}</Alert> }
                 </div>
             </form>
         </div>
